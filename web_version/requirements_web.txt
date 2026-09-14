@@ -1,0 +1,29 @@
+# Web Version Dependencies
+# Core Framework
+Flask>=2.0.0
+Flask-SQLAlchemy>=3.0.0
+Flask-CORS>=4.0.0
+
+# Database
+SQLAlchemy>=2.0.0
+
+# Image Processing
+opencv-python>=4.5.0
+Pillow>=9.0.0
+numpy>=1.20.0
+
+# YOLO11 - adjust version as needed
+ultralytics>=8.0.0
+
+# File Processing
+Werkzeug>=2.0.0
+
+# Utilities
+python-dotenv>=1.0.0
+
+# Optional: GPU Support
+# torch>=2.0.0
+# torchvision>=0.15.0
+
+# Optional: Production Server
+# gunicorn==21.2.0

@@ -1,0 +1,47 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# YOLO11 object detection model with P2-P4 outputs (去掉P5层，专注中小目标检测)
+# 适用于交通标志等中小目标检测场景
+
+# Parameters
+nc: 80 # number of classes
+scales: # model compound scaling constants, i.e. 'model=yolo11n.yaml' will call yolo11.yaml with scale 'n'
+  # [depth, width, max_channels]
+  n: [0.50, 0.25, 1024] # 去掉P5后：参数量↓25%，速度↑30%
+  s: [0.50, 0.50, 1024]
+  m: [0.50, 1.00, 512]
+  l: [1.00, 1.00, 512]
+  x: [1.00, 1.50, 512]
+
+# YOLO11n backbone (去掉P5分支)
+backbone:
+  # [from, repeats, module, args]
+  - [-1, 1, Conv, [64, 3, 2]]   # 0-P1/2
+  - [-1, 1, Conv, [128, 3, 2]]  # 1-P2/4
+  - [-1, 2, CSP_PMSFA, [128, True]]  # 2 (保持P2通道为128)
+  - [-1, 1, Conv, [256, 3, 2]]  # 3-P3/8
+  - [-1, 2, CSP_PMSFA, [256, True]]  # 4 (保持P3通道为256)
+  - [-1, 1, Conv, [512, 3, 2]]  # 5-P4/16
+  - [-1, 2, CSP_PMSFA, [512, True]]  # 6 (P4通道为512)
+  - [-1, 1, SPPF, [512, 5]]  # 7 (降低SPPF：1024→512)
+  - [-1, 2, C2DA, [512]]  # 8 (降低C2DA：1024→512)
+
+# YOLO11n head (P2/P3/P4 三层检测)
+# 关键：去掉P5后，C2DA输出就是P4级别(40x40)，直接从这里开始上采样
+head:
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]  # 9 (从layer 8上采样: 40x40→80x80)
+  - [[-1, 4], 1, Concat, [1]]  # 10 cat backbone P3 (layer 4: 80x80) ✅尺寸匹配
+  - [-1, 2, CSP_PMSFA, [256, False]]  # 11 (P3融合层)
+
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]  # 12 (从layer 11上采样: 80x80→160x160)
+  - [[-1, 2], 1, Concat, [1]]  # 13 cat backbone P2 (layer 2: 160x160) ✅尺寸匹配
+  - [-1, 2, CSP_PMSFA, [128, False]]  # 14 (P2/4-xsmall)
+
+  - [-1, 1, Conv, [128, 3, 2]]  # 15 (P2下采样: 160x160→80x80)
+  - [[-1, 11], 1, Concat, [1]]  # 16 cat head P3 (layer 11: 80x80) ✅尺寸匹配
+  - [-1, 2, CSP_PMSFA, [256, False]]  # 17 (P3/8-medium)
+
+  - [-1, 1, Conv, [256, 3, 2]]  # 18 (P3下采样: 80x80→40x40)
+  - [[-1, 8], 1, Concat, [1]]  # 19 cat backbone P4 (layer 8: 40x40) ✅尺寸匹配
+  - [-1, 2, CSP_PMSFA, [512, False]]  # 20 (P4/16-large)
+
+  - [[14, 17, 20], 1, Detect, [nc]]  # Detect(P2, P3, P4) 三层检测

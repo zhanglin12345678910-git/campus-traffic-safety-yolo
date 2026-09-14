@@ -1,0 +1,82 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+secrets*.json
+
+# Local AI/editor configuration
+.claude/
+.agents/
+.idea/
+.vscode/
+%USERPROFILE%/
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage*
+htmlcov/
+.venv/
+venv/
+env/
+build/
+dist/
+*.egg-info/
+
+# Runtime and generated data
+instance/
+uploads/
+outputs/
+output/
+results/
+runs/
+new-runs/
+wandb/
+logs/
+datasets/
+dataset/
+weights/
+train_1/
+train_2/
+better_images/
+generated_results_png/
+*.cache
+*.log
+
+# Model files and exports
+*.pt
+*.pth
+*.weights
+*.onnx
+*.engine
+*.pb
+*.tflite
+*.h5
+*_saved_model/
+*_openvino_model/
+*_paddle_model/
+
+# Private/submission artifacts
+campus-safety-agent/
+competition-materials*/
+competition-submission*/
+*.docx
+*.pptx
+*.pdf
+*.mp4
+*.avi
+*.mov
+*.lnk
+
+# OS and Office temporary files
+.DS_Store
+Thumbs.db
+~$*
