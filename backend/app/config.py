@@ -112,14 +112,8 @@ class Settings(BaseSettings):
     llm_max_retries: int = 2
     llm_required: bool = False
 
-    # Optional vision-language model (VLM) sidecar. It NEVER makes the risk
-    # decision: its vision_assessment is only text evidence merged into the
-    # DeepSeek text-model payload (mode B, see docs/VLM_INTEGRATION_PROPOSAL.md
-    # review section). Default provider is DeepSeek's experimental vision
-    # model (same API key family as the text model); the DashScope key in .env
-    # stays available as an alternative by switching base_url/model here.
-    # 2026-09-14 用户拍板：默认启用（比赛提交物含 VLM）。回退方式不变：
-    # .env 设 VISION_LLM_ENABLED=false 即与改造前逐字节等价。
+    # Optional visual evidence supplements text assessment; it does not decide
+    # risk levels. Set VISION_LLM_ENABLED=false to use text-only assessment.
     vision_llm_enabled: bool = True
     vision_llm_base_url: str = "https://api.deepseek.com/v1"
     vision_llm_api_key: str | None = None  # empty -> reuse llm_api_key

@@ -8,12 +8,12 @@ from app.cloud_admin import KNOWLEDGE_NAMES, api_client, cloud_guard, response_j
 ROOT = Path(__file__).resolve().parents[2]
 
 
-@pytest.mark.parametrize("username,password", [("judge", "competition-pass-123"), ("judge_2", "安全演示密码足够长十二位以上")])
+@pytest.mark.parametrize("username,password", [("operator", "test-password-123456"), ("operator_2", "安全演示密码足够长十二位以上")])
 def test_cloud_login_valid(username, password):
     validate_login(username, password)
 
 
-@pytest.mark.parametrize("username,password", [("a:b", "competition-pass-123"), ("judge", "short"), ("judge", "password-long\ninvalid")])
+@pytest.mark.parametrize("username,password", [("a:b", "test-password-123456"), ("operator", "short"), ("operator", "password-long\ninvalid")])
 def test_cloud_login_rejects_invalid(username, password):
     with pytest.raises(ValueError):
         validate_login(username, password)
@@ -43,8 +43,8 @@ def test_cloud_response_error_does_not_echo_body():
 
 
 def test_cloud_anonymous_gateway_request_overrides_client_auth(monkeypatch):
-    monkeypatch.setenv("DEMO_USER", "judge")
-    monkeypatch.setenv("DEMO_PASSWORD", "competition-pass-123")
+    monkeypatch.setenv("DEMO_USER", "operator")
+    monkeypatch.setenv("DEMO_PASSWORD", "test-password-123456")
     with api_client(gateway=True) as client:
         seen = []
         client._transport = httpx.MockTransport(lambda request: (seen.append(request.headers.get("authorization")), httpx.Response(200))[1])
@@ -68,5 +68,5 @@ def test_cloud_contract_prebuilt_cpu_no_public_backend():
     assert "COPY dist" in dockerfile and "npm" not in dockerfile
     assert "dist" not in (ROOT / "frontend/.dockerignore").read_text().splitlines()
     nginx = (ROOT / "deploy/nginx.cloud.conf").read_text()
-    assert 'auth_basic "Anxun competition demo"' in nginx
+    assert 'auth_basic "Campus Safety"' in nginx
     assert "proxy_read_timeout 600s" in nginx

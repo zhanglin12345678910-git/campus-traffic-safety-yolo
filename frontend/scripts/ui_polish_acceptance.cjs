@@ -63,7 +63,7 @@ async function main() {
       ['/analytics', '巡检数据分析', '05-analytics'],
       ['/knowledge', '校园交通安全知识库', '06-knowledge'],
       ['/settings', '服务与访问配置', '07-settings'],
-      [`/inspection/${detail.id}`, 'AI Agent 执行轨迹', '08-detail'],
+      [`/inspection/${detail.id}`, '巡检执行轨迹', '08-detail'],
     ]
     for (const [route, marker, name] of routes) {
       await check(`1440px ${name}: stable assets and layout`, async () => {
@@ -106,7 +106,7 @@ async function main() {
       })
       await check('Risk summary and full reference disclosure match real task', async () => {
         await page.setViewportSize({ width: 1440, height: 1000 })
-        await stable(page, `/inspection/${detail.id}`, 'AI Agent 执行轨迹')
+        await stable(page, `/inspection/${detail.id}`, '巡检执行轨迹')
         assert(await page.locator('.risk-summary-copy').innerText() === detail.risk_result.problem_summary, 'Risk summary content changed')
         const summaryStyle = await page.locator('.risk-summary-copy').evaluate(node => ({ font: parseFloat(getComputedStyle(node).fontSize), weight: Number(getComputedStyle(node).fontWeight) }))
         assert(summaryStyle.font >= 14 && summaryStyle.weight <= 500, `Risk summary is still a small bold heading: ${JSON.stringify(summaryStyle)}`)

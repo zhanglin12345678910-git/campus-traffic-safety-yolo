@@ -111,7 +111,7 @@ class RiskAssessmentService:
         review_reasons: list[str],
         vision_events: list[dict[str, Any]],
     ) -> list[str]:
-        """Apply conservative policy B (decision record: audit/REMEDIATION_2026-09-13.md).
+        """Apply conservative risk assessment and manual-review policy.
 
         Explicit evidence/quality/tool reasons always require review.  A visual
         event that requests manual confirmation also requires review.  Clean

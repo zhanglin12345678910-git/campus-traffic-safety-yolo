@@ -116,7 +116,7 @@ def valid_image_bytes() -> bytes:
 def created_task(client: TestClient, valid_image_bytes: bytes) -> dict:
     response = client.post(
         "/api/v1/inspections",
-        data={"location": "学校大门东侧", "area_type": "校门口", "description": "比赛演示样例"},
+        data={"location": "学校大门东侧", "area_type": "校门口", "description": "巡检测试样例"},
         files={"file": ("campus.jpg", valid_image_bytes, "image/jpeg")},
     )
     assert response.status_code == 201, response.text

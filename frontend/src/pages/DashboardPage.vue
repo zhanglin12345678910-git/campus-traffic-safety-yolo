@@ -270,7 +270,7 @@ onMounted(async () => {
           </section>
 
           <section class="ops-panel detection-panel">
-            <header><h2>AI 近期检测 <span>({{ incidents.length }})</span></h2><span class="panel-source">巡检档案实时汇总</span></header>
+            <header><h2>近期检测 <span>({{ incidents.length }})</span></h2><span class="panel-source">巡检档案实时汇总</span></header>
             <div class="ops-table">
               <div class="ops-row ops-head"><span>时间</span><span>事件类型</span><span>位置</span><span>置信度</span><span>处置状态</span></div>
               <div v-for="item in incidents" :key="item.id" class="ops-row" @click="selectIncident(item)">

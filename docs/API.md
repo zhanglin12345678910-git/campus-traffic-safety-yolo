@@ -36,4 +36,4 @@
 - `/dashboard` 的 `today_tasks` 与 `daily_trend` 按 `APP_TIMEZONE`（默认 `Asia/Shanghai`）划分自然日；`daily_trend` 固定 7 项，每项含 `date`、`total`、`review_required`（当天创建且仍待复核）、`high_risk`。
 - `/analytics/overview` 为只读汇总接口；返回累计任务/闭环率/复核率/平均耗时、30 日趋势、风险和状态构成、区域分布、按任务去重的复核原因分类、模型检出贡献、高频类别与 Agent 节点平均耗时。所有值均由当前数据库记录聚合，不生成演示数据。
 - `/maps/weather` 在未配置 Key 或供应商失败时仍返回 HTTP 200，内容为 `{"available": false, "message": ...}`，避免顶栏在每个页面制造控制台错误；可用时返回 `available: true` 与 `weather`、`temperature`、`report_time` 等字段，服务端缓存 10 分钟。
-- `/health` 的 `general_yolo` 额外给出 `tracking_loaded` 与 `tracking_load_count`：视频跟踪使用独立模型实例，不与图片推理共享（见 `docs/HANDOFF.md` 第 2.1 节）。
+- `/health` 的 `general_yolo` 额外给出 `tracking_loaded` 与 `tracking_load_count`：视频跟踪使用独立模型实例，不与图片推理共享。

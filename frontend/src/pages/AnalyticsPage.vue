@@ -287,7 +287,7 @@ onMounted(load)
 
     <section v-if="hasTasks && !failure" class="analysis-brief" aria-label="复核工作提示">
       <span class="brief-icon"><el-icon><WarningFilled /></el-icon></span>
-      <div><strong>{{ analytics.summary.review_required }} 项任务等待人工确认</strong><p>结合现场证据与 AI 研判结果，完成复核和处置闭环。</p></div>
+      <div><strong>{{ analytics.summary.review_required }} 项任务等待人工确认</strong><p>结合现场证据与风险评估结果，完成复核和处置闭环。</p></div>
       <el-button @click="router.push('/reviews')">进入复核队列</el-button>
     </section>
 

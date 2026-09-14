@@ -9,14 +9,13 @@
 credentials*.json
 secrets*.json
 
-# Personal agent/editor state
-.git/
-.workbuddy/
-.claude/
-.agents/
-.idea/
-.vscode/
-.playwright-cli/
+# Local configuration and hidden state
+.*
+!.gitignore
+!.dockerignore
+!.env.example
+!.github/
+!.github/**
 
 # Python/Node build and cache files
 __pycache__/
@@ -49,6 +48,8 @@ frontend/public/campus/
 frontend/src/assets/incidents/
 frontend/design-references/
 samples/
+test-data/
+cloud-data/
 *.db
 *.sqlite*
 *.log

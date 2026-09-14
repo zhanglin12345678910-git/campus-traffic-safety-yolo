@@ -116,7 +116,7 @@ onBeforeUnmount(() => stream?.close())
         <section class="review-evidence-grid">
           <div class="detail-action-stack">
           <article class="content-card trace-card review-trace-card">
-            <div class="section-title"><div><p class="eyebrow">AGENT TRACE</p><h3>AI Agent 执行轨迹</h3></div><span class="live-badge" v-if="!finished">● 实时执行</span></div>
+            <div class="section-title"><div><p class="eyebrow">WORKFLOW TRACE</p><h3>巡检执行轨迹</h3></div><span class="live-badge" v-if="!finished">● 实时执行</span></div>
             <div class="trace-summary"><div><small>完成节点</small><strong>{{ succeededSteps }}/{{ trace.length }}</strong></div><div><small>链路进度</small><strong>{{ traceProgress }}%</strong></div><div><small>任务耗时</small><strong>{{ traceDuration.toFixed(0) }} ms</strong></div><div><small>复核状态</small><strong>{{ task.review_required ? '待人工确认' : '无需复核' }}</strong></div></div>
             <el-progress :percentage="traceProgress" :show-text="false" :stroke-width="6" />
             <div class="trace-list trace-list-horizontal">

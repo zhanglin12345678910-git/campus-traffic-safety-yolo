@@ -37,7 +37,7 @@ def cloud_guard() -> None:
 
 
 def setup() -> None:
-    username, password = os.environ.get("DEMO_USER", "judge"), os.environ.get("DEMO_PASSWORD", "")
+    username, password = os.environ.get("DEMO_USER", "operator"), os.environ.get("DEMO_PASSWORD", "")
     validate_login(username, password)
     for name in ("LLM_API_KEY", "VISION_LLM_API_KEY", "AMAP_WEB_SERVICE_KEY"):
         if not os.environ.get(name, "").strip():
@@ -57,7 +57,7 @@ def setup() -> None:
 
 
 def api_client(*, gateway: bool = False) -> httpx.Client:
-    auth = (os.environ.get("DEMO_USER", "judge"), os.environ.get("DEMO_PASSWORD", "")) if gateway else None
+    auth = (os.environ.get("DEMO_USER", "operator"), os.environ.get("DEMO_PASSWORD", "")) if gateway else None
     return httpx.Client(base_url="http://frontend" if gateway else "http://127.0.0.1:8000",
                         auth=auth, timeout=30, trust_env=False)
 
@@ -125,9 +125,9 @@ def verify() -> None:
     result = check()
     # Explicitly creates only a new cloud acceptance task, not a local task.
     with api_client(gateway=True) as client:
-        with Path("/app/acceptance-image.jpg").open("rb") as image:
+        with Path("/app/acceptance-data/acceptance.jpg").open("rb") as image:
             task = response_json(client.post("/api/v1/inspections", data={
-                "location": "云端CPU部署验收（TT100K夹具，非校园实拍）", "area_type": "校园主干道",
+                "location": "CPU功能验证（授权测试素材）", "area_type": "校园主干道",
                 "inspector_name": "部署验收脚本", "description": "仅验证功能闭环，不是真实事件或准确率真值"},
                 files={"file": ("acceptance.jpg", image, "image/jpeg")}))
         task_id = task["id"]

@@ -2,10 +2,11 @@
 .env
 .env.*
 !.env.example
-.workbuddy
+.*
 .runtime
 .cloud-runtime
 cloud-data
+test-data
 backend/data
 backend/.runtime
 backend/.env*

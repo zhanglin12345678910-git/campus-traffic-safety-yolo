@@ -250,7 +250,7 @@ def test_review_end_to_end(page: Page, context: BrowserContext) -> None:
     page.reload(wait_until="domcontentloaded")
     confirm = page.get_by_role("button", name="人工确认", exact=True)
     confirm.wait_for(state="visible", timeout=30_000)
-    page.get_by_text("AI Agent 执行轨迹", exact=True).wait_for(state="visible", timeout=20_000)
+    page.get_by_text("巡检执行轨迹", exact=True).wait_for(state="visible", timeout=20_000)
     check(page.locator(".trace-item").count() >= 4, "agent execution trace has fewer than four recorded steps")
     uncertainty = page.locator(".uncertainty").inner_text()
     check("WinError" not in uncertainty, "raw LLM transport details leaked into the user interface")

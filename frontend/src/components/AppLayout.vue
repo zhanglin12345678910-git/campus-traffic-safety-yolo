@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
           <span class="school-seal official-school-mark"><img :src="schoolLogo" alt="四川现代职业学院校徽" /></span>
           <strong>{{ campusProfile.name }}</strong>
           <i></i>
-          <small>AI 守护校园出行安全</small>
+          <small>守护校园出行安全</small>
         </div>
         <div class="environment-strip">
           <!-- v-show keeps the element so the mobile nth-child rules stay aligned. -->

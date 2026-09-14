@@ -18,7 +18,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 from app.cloud_admin import KNOWLEDGE_NAMES
 from app.config import Settings
 
-EXCLUDED_PARTS = {"__pycache__", ".pytest_cache", ".runtime", "data", "node_modules", "output", "design-references", ".git"}
+EXCLUDED_PARTS = {"__pycache__", ".pytest_cache", ".runtime", "data", "node_modules", "output", "design-references", "incidents", "campus", ".git"}
 
 
 def selected_files(root: Path):
@@ -66,7 +66,7 @@ def main() -> None:
                if s and len(str(s)) >= 8]
     files = sorted(set(selected_files(ROOT)))
     manifest = {"created_utc": datetime.now(timezone.utc).isoformat(), "target": "linux/amd64 cpu",
-                "training": "32/80 stopped by user, not complete", "history_migrated": False,
+                "training": "partial checkpoint; see model documentation", "history_migrated": False,
                 "container_runtime_verified": False, "files": {}}
     # Scan before opening the output, so a detected credential cannot leak into a partial ZIP.
     text_extensions = {".py", ".md", ".json", ".yml", ".yaml", ".ts", ".vue", ".css", ".html", ".js", ".conf", ".sh", ".example", ".txt", ".ini", ".mako"}

@@ -154,7 +154,7 @@ async function main() {
     {
       await reviewButton.click()
       await page.waitForURL(/\/inspection\/[0-9a-f-]{36}$/, { timeout: 30_000 })
-      await page.getByText('AI Agent 执行轨迹', { exact: true }).waitFor({ state: 'visible', timeout: 20_000 })
+      await page.getByText('巡检执行轨迹', { exact: true }).waitFor({ state: 'visible', timeout: 20_000 })
       await page.locator('.trace-item').first().waitFor({ state: 'visible', timeout: 20_000 })
       assert(await page.locator('.trace-item').count() >= 4, 'inspection detail has too few trace steps')
     }
@@ -197,7 +197,7 @@ async function main() {
     await goto(referencePage, '/reviews')
     await referencePage.getByRole('button', { name: '进入复核', exact: true }).first().click()
     await referencePage.waitForURL(/\/inspection\/[0-9a-f-]{36}$/, { timeout: 30_000 })
-    await referencePage.getByText('AI Agent 执行轨迹', { exact: true }).waitFor({ state: 'visible', timeout: 20_000 })
+    await referencePage.getByText('巡检执行轨迹', { exact: true }).waitFor({ state: 'visible', timeout: 20_000 })
     await referencePage.screenshot({ path: path.join(outputDir, 'review-detail-reference-1680x945.png') })
   })
   await reference.close()

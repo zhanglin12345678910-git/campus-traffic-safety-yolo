@@ -1,6 +1,6 @@
-# Agent 设计
+# 巡检工作流设计
 
-系统使用 `langgraph.graph.StateGraph` 构建并编译，不是手写 if/else 流程的包装。
+系统使用 `langgraph.graph.StateGraph` 构建并编译巡检工作流。
 
 ## 状态
 
