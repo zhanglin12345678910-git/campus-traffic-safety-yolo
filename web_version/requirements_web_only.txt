@@ -1,7 +1,0 @@
-# Only Web-specific packages (assumes YOLO environment already exists)
-Flask>=2.0.0
-Flask-SQLAlchemy>=3.0.0
-Flask-CORS>=4.0.0
-SQLAlchemy>=2.0.0
-Werkzeug>=2.0.0
-python-dotenv>=1.0.0

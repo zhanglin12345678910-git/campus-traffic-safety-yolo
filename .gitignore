@@ -1,4 +1,4 @@
-# Secrets and local configuration
+# Local credentials: keep only reviewed templates
 .env
 .env.*
 !.env.example
@@ -9,74 +9,70 @@
 credentials*.json
 secrets*.json
 
-# Local AI/editor configuration
+# Personal agent/editor state
+.git/
+.workbuddy/
 .claude/
 .agents/
 .idea/
 .vscode/
-%USERPROFILE%/
+.playwright-cli/
 
-# Python caches and environments
+# Python/Node build and cache files
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-.coverage*
-htmlcov/
 .venv/
 venv/
-env/
-build/
+node_modules/
 dist/
+*.tsbuildinfo
 *.egg-info/
+.coverage*
+coverage.xml
 
-# Runtime and generated data
-instance/
-uploads/
-outputs/
+# Private runtime data and original media at any depth
+data/
+.runtime/
+uploads*/
+outputs*/
 output/
 results/
 runs/
-new-runs/
-wandb/
 logs/
-datasets/
-dataset/
-weights/
-train_1/
-train_2/
-better_images/
-generated_results_png/
-*.cache
+mysql_data/
+qdrant_storage/
+校园照片/
+frontend/public/campus/
+frontend/src/assets/incidents/
+frontend/design-references/
+samples/
+*.db
+*.sqlite*
 *.log
-
-# Model files and exports
-*.pt
-*.pth
-*.weights
-*.onnx
-*.engine
-*.pb
-*.tflite
-*.h5
-*_saved_model/
-*_openvino_model/
-*_paddle_model/
-
-# Private/submission artifacts
-campus-safety-agent/
-competition-materials*/
-competition-submission*/
-*.docx
-*.pptx
-*.pdf
+*.pid
 *.mp4
 *.avi
 *.mov
+*.webm
+*.pdf
+*.docx
+*.pptx
+*.zip
 *.lnk
 
-# OS and Office temporary files
+# Model weights require separate authorized distribution
+models/*
+!models/README.md
+*.pt
+*.pth
+*.onnx
+*.engine
+training/*.json
+
+# Temporary OS/Office files
 .DS_Store
 Thumbs.db
 ~$*

@@ -1,0 +1,61 @@
+# Independent CPU demo deployment; do not merge with docker-compose.yml.
+name: campus-safety-cloud
+services:
+  backend:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    env_file: .env.cloud
+    environment:
+      DATABASE_URL: sqlite:///./data/campus_safety.db
+      QDRANT_URL: ""
+      QDRANT_PATH: /app/backend/data/qdrant
+      YOLO_MODEL_PATH: /app/models/yolo26-tt100k-best.pt
+      GENERAL_YOLO_MODEL_PATH: /app/models/yolo26m.pt
+      GENERAL_YOLO_ENABLED: "true"
+      YOLO_DEVICE: cpu
+      OUTBOUND_HTTP_PROXY: ""
+      EMBEDDING_PROVIDER: hash
+      UPLOAD_DIR: /app/uploads
+      OUTPUT_DIR: /app/outputs
+      ULTRALYTICS_CONFIG_DIR: /app/backend/data/ultralytics
+      OMP_NUM_THREADS: "2"
+      OPENBLAS_NUM_THREADS: "2"
+      MKL_NUM_THREADS: "2"
+    volumes:
+      - ./models:/app/models:ro
+      - ./knowledge:/app/knowledge:ro
+      - ./cloud-data:/app/backend/data
+      - ./uploads:/app/uploads
+      - ./outputs:/app/outputs
+      - ./.cloud-runtime:/app/deploy-runtime
+      - ./frontend/src/assets/incidents/dormitory-road.jpg:/app/acceptance-image.jpg:ro
+    healthcheck:
+      test: [CMD, python, -c, "import json,urllib.request; d=json.load(urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health',timeout=5)); assert d['status']=='ok' and d['services']['qdrant']['status']=='ok' and d['services']['yolo']['configured'] and d['services']['general_yolo']['configured']"]
+      interval: 15s
+      timeout: 8s
+      retries: 12
+      start_period: 60s
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+
+  frontend:
+    platform: linux/amd64
+    build:
+      context: frontend
+      dockerfile: Dockerfile.cloud
+    restart: unless-stopped
+    ports:
+      - "${CLOUD_BIND_IP:-0.0.0.0}:${CLOUD_HTTP_PORT:-80}:80"
+    volumes:
+      - ./deploy/nginx.cloud.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./.cloud-runtime/demo.htpasswd:/etc/nginx/demo.htpasswd:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}

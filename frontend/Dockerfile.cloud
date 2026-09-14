@@ -1,0 +1,5 @@
+# The release builder supplies dist; never compile Vue on a 1.8 GiB server.
+FROM nginx:1.27-alpine
+COPY dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80

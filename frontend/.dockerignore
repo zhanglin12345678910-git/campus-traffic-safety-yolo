@@ -1,0 +1,6 @@
+node_modules
+design-references
+output
+*.log
+.vite
+.DS_Store

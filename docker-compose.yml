@@ -1,0 +1,94 @@
+name: campus-safety-agent
+
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-campus_safety}
+      MYSQL_USER: ${MYSQL_USER:-campus}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change-me}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change-root-me}
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  qdrant:
+    image: qdrant/qdrant:v1.15.5
+    restart: unless-stopped
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    ports:
+      - "127.0.0.1:6333:6333"
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - path: .env.example
+      - path: .env
+        required: false
+      - path: .env.amap
+        required: false
+    environment:
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER:-campus}:${MYSQL_PASSWORD:-change-me}@mysql:3306/${MYSQL_DATABASE:-campus_safety}?charset=utf8mb4
+      QDRANT_URL: http://qdrant:6333
+      YOLO_MODEL_PATH: /app/models/yolo26-tt100k-best.pt
+      GENERAL_YOLO_ENABLED: ${GENERAL_YOLO_ENABLED:-true}
+      GENERAL_YOLO_MODEL_PATH: /app/models/yolo26m.pt
+      YOLO_DEVICE: ${DOCKER_YOLO_DEVICE:-cpu}
+      UPLOAD_DIR: /app/uploads
+      OUTPUT_DIR: /app/outputs
+      API_KEY: ${API_KEY:-}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+      OUTBOUND_HTTP_PROXY: ${DOCKER_OUTBOUND_HTTP_PROXY:-}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-hash}
+      EMBEDDING_BASE_URL: ${EMBEDDING_BASE_URL:-}
+      EMBEDDING_API_KEY: ${EMBEDDING_API_KEY:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-text-embedding-3-small}
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://api.deepseek.com}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-deepseek-v4-flash}
+      LLM_REQUIRED: ${LLM_REQUIRED:-false}
+      AMAP_WEB_SERVICE_KEY: ${AMAP_WEB_SERVICE_KEY:-}
+      AMAP_BASE_URL: ${AMAP_BASE_URL:-https://restapi.amap.com}
+    volumes:
+      - ./models:/app/models:ro
+      - ./uploads:/app/uploads
+      - ./outputs:/app/outputs
+    depends_on:
+      mysql:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import json,urllib.request; d=json.load(urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health',timeout=3)); assert d['status']=='ok' and d['services']['qdrant']['status']=='ok' and d['services']['yolo']['configured'] and d['services']['general_yolo']['configured']"
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
+  qdrant_storage:

@@ -1,11 +1,13 @@
-# Security and privacy
+# 安全与隐私
 
-Do not commit API keys, access tokens, passwords, private datasets, uploaded media,
-model weights, training outputs, or local editor/agent configuration.
+本仓库发布完整校园安全系统的源码、前端运行素材、配置模板、知识材料与部署说明；不发布真实账号配置、生产数据、上传记录、原始校园照片或模型权重。
 
-Copy `.env.example` to `.env` for local use. Keep real values only in `.env` or a
-secret manager. The `.env` file and common credential formats are ignored by Git.
+- `.env`、`.env.amap`、`.env.proxy` 及其他真实凭据只保存在本机或部署环境。
+- `.env.example` 和 `deploy/cloud.env.example` 中的凭据必须使用空值或明确占位值。
+- API Key、地图服务 Key 和模型供应商 Key 不得进入前端源代码、构建产物、截图或日志。
+- 模型权重请按 `models/README.md` 单独配置，并确认许可证和分发权限。
+- 文档中的 `<LOCAL_PATH>`、`local-path/` 和 `project_user` 是脱敏占位内容，请根据实际环境配置。
+- 发布前应再次扫描文件、提交和配置模板；正则扫描通过不能证明不存在所有隐私风险。
 
-If a credential is ever committed, revoke and rotate it immediately. Removing it
-from the latest revision is not sufficient because Git history retains old blobs.
+如果密钥曾经被提交，必须先撤销并轮换密钥，再清理受影响的 Git 历史。删除最新文件不能消除历史中的密钥。
 

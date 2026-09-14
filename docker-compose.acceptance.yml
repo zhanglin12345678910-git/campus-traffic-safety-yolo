@@ -1,0 +1,24 @@
+# Compose >= 2.24.4. Never merge acceptance fixtures into production volumes.
+name: campus-safety-acceptance
+services:
+  mysql:
+    volumes: !override
+      - acceptance_mysql:/var/lib/mysql
+  qdrant:
+    ports: !override
+      - "127.0.0.1:6334:6333"
+    volumes: !override
+      - acceptance_qdrant:/qdrant/storage
+  backend:
+    volumes: !override
+      - ./models:/app/models:ro
+      - acceptance_uploads:/app/uploads
+      - acceptance_outputs:/app/outputs
+  frontend:
+    ports: !override
+      - "127.0.0.1:8081:80"
+volumes:
+  acceptance_mysql:
+  acceptance_qdrant:
+  acceptance_uploads:
+  acceptance_outputs:
